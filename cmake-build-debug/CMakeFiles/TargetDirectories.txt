@@ -1,0 +1,3 @@
+/home/tomaszak/Pulpit/ProjektKCK/cmake-build-debug/CMakeFiles/ProjektKCK.dir
+/home/tomaszak/Pulpit/ProjektKCK/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/tomaszak/Pulpit/ProjektKCK/cmake-build-debug/CMakeFiles/rebuild_cache.dir
