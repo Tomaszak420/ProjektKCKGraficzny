@@ -49,9 +49,9 @@ int main() {
     keypad(stdscr, TRUE);
     curs_set(0);
 
+    //Ustawienia okna na środku
     int height, width;
     getmaxyx(stdscr, height, width);
-
     int start_y = (height - 4) / 2;
     int start_x = (width - 8) / 2;
     WINDOW* win = newwin(6, 22, start_y - 1, start_x - 1);
@@ -64,7 +64,7 @@ int main() {
     const int MAX_SELECTED = 16;
     const char* selected_letters[MAX_SELECTED];
     int selected_count = 0;
-
+    //Losowanie i zapisanie liter
     const int ROWS = 4, COLS = 4;
     string letters[ROWS][COLS];
     for (int i = 0; i < ROWS; ++i) {
@@ -75,9 +75,8 @@ int main() {
         }
     }
     wrefresh(win);
-
+   //Podświetlenie najechanych liter
     int cursor_y = 1, cursor_x = 1;
-
     while (true) {
         for (int i = 0; i < ROWS; ++i) {
             for (int j = 0; j < COLS; ++j) {
@@ -89,9 +88,8 @@ int main() {
             }
         }
         wrefresh(win);
-
+        //Poruszanie się po ekranie
         int ch = getch();
-
         if (ch == KEY_UP && cursor_y > 1) {
             cursor_y--;
         } else if (ch == KEY_DOWN && cursor_y < ROWS) {
@@ -100,7 +98,7 @@ int main() {
             cursor_x -= 5;
         } else if (ch == KEY_RIGHT && cursor_x < 1 + (COLS - 1) * 5) {
             cursor_x += 5;
-        } else if (ch == 10) {  // Enter
+        } else if (ch == 10) {
             if (selected_count < MAX_SELECTED) {
                 int letter_x = (cursor_x - 1) / 5;
                 int letter_y = cursor_y - 1;
