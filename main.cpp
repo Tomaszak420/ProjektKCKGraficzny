@@ -2,7 +2,25 @@
 #include <cstdlib>
 #include <ctime>
 #include <ncurses.h>
+#include <fstream>
+#include <cstring>
 using namespace std;
+
+bool SprawdzSlowo(const char* word) {
+    ifstream file("../dictionary.txt");
+    if (!file.is_open()) {
+        cerr << "Błąd otwierania słownika" << endl;
+        return false;
+    }
+
+    string line;
+    while (getline(file, line)) {
+        if (line == word) {
+            return true;
+        }
+    }
+    return false;
+}
 
 int main() {
     srand(time(0));
@@ -25,76 +43,108 @@ int main() {
             {"U", "W", "I", "L", "R", "G"},
             {"P", "A", "C", "E", "M", "D"}
     };
-//Wyłączenie klawiatury i włączenie strzałek
+
     initscr();
     noecho();
     keypad(stdscr, TRUE);
     curs_set(0);
-//Usawienie naszej planszy na środku
+
     int height, width;
     getmaxyx(stdscr, height, width);
+
     int start_y = (height - 4) / 2;
     int start_x = (width - 8) / 2;
     WINDOW* win = newwin(6, 22, start_y - 1, start_x - 1);
+
     refresh();
     box(win, 0, 0);
     wrefresh(win);
 
-    //Wybrane litery max długość to 16 no bo taka plansza
-    const char* selected_letters[16];
+    // Tablica na wybrane litery
+    const int MAX_SELECTED = 16;
+    const char* selected_letters[MAX_SELECTED];
     int selected_count = 0;
 
-    // Wypisywanie liter w środku okna
     const int ROWS = 4, COLS = 4;
     string letters[ROWS][COLS];
     for (int i = 0; i < ROWS; ++i) {
         for (int j = 0; j < COLS; ++j) {
             int randomIndex = rand() % 6;
-            letters[i][j] = dice[i * COLS + j][randomIndex];  // Przechowywanie liter w tablicy dzięki czemu po wciśnięciu wiadomo jaka to litera
-            mvwprintw(win, i + 1, j * 5 + 1, "| %s |", dice[i * COLS + j][randomIndex]); //Wyświetla wartości na oknie (win)
+            letters[i][j] = dice[i * COLS + j][randomIndex];
+            mvwprintw(win, i + 1, j * 5 + 1, "| %s |", dice[i * COLS + j][randomIndex]);
         }
     }
     wrefresh(win);
 
-    // Pozycja kursora
-    int cursor_y = 1,cursor_x = 1;
+    int cursor_y = 1, cursor_x = 1;
 
     while (true) {
-        // Podświetlenie aktualnej pozycji kursora
         for (int i = 0; i < ROWS; ++i) {
             for (int j = 0; j < COLS; ++j) {
                 if (i + 1 == cursor_y && j * 5 + 1 == cursor_x) {
-                    wattron(win, A_REVERSE);  // Włącz podświetlenie jeśli kursor jest na tej pozycji
+                    wattron(win, A_REVERSE);
                 }
                 mvwprintw(win, i + 1, j * 5 + 1, "| %s |", letters[i][j].c_str());
-                wattroff(win, A_REVERSE);  // Brak podświelenia i zwykłe litery jeśli kursor jest gdzie indziej
+                wattroff(win, A_REVERSE);
             }
         }
         wrefresh(win);
 
         int ch = getch();
-        //Dodać jakoś żeby sprawdzało czy te litery sa obok//
+
         if (ch == KEY_UP && cursor_y > 1) {
-            cursor_y--; //odejmuje od y
+            cursor_y--;
         } else if (ch == KEY_DOWN && cursor_y < ROWS) {
-            cursor_y++; //dodaje do y
-        } else if (ch == KEY_LEFT && cursor_x > 1) {  // Poruszanie w lewo
+            cursor_y++;
+        } else if (ch == KEY_LEFT && cursor_x > 1) {
             cursor_x -= 5;
-        } else if (ch == KEY_RIGHT && cursor_x < 1 + (COLS - 1) * 5) {  // Poruszanie w prawo
+        } else if (ch == KEY_RIGHT && cursor_x < 1 + (COLS - 1) * 5) {
             cursor_x += 5;
-        } else if (ch == 10) {  //Wybranie litery //Dodać blokade na tą samą litere
-            if (selected_count < 16) {
+        } else if (ch == 10) {  // Enter
+            if (selected_count < MAX_SELECTED) {
                 int letter_x = (cursor_x - 1) / 5;
                 int letter_y = cursor_y - 1;
-                selected_letters[selected_count++] = letters[letter_y][letter_x].c_str();  // Dodanie wybranej litery do wypisania/sprawdzenia
-                move(height - 1, 0);  // Przesunięcie kursora na dół ekranu na chwile żeby wpisało litere
-
+                selected_letters[selected_count++] = letters[letter_y][letter_x].c_str();
+                move(height - 1, 0);
+                clrtoeol();
                 for (int i = 0; i < selected_count; ++i) {
-                    printw("%s ", selected_letters[i]);  // Wyświetlanie wybranych liter
+                    printw("%s ", selected_letters[i]);
                 }
                 refresh();
             }
-        } else if (ch == 'x') {  // Dodać tu spradzenie słowa w słowniku po wciścięciu x
+            // Wykonanie sprawdzenia słowa
+        } else if (ch == 'w') {
+            if (selected_count > 0) {
+                // Złączenie liter w jedno słowo
+                char word[17] = "";
+                for (int i = 0; i < selected_count; ++i) {
+                    strcat(word, selected_letters[i]);
+                }
+
+                // Sprawdzenie, czy słowo istnieje w pliku
+                if (SprawdzSlowo(word)) {
+                    move(height - 2, 0);
+                    clrtoeol();
+                    printw("Słowo znalezione: %s", word);
+                } else {
+                    move(height - 2, 0);
+                    clrtoeol();
+                    printw("Słowo nie znalezione: %s", word);
+                }
+
+                refresh();
+
+                // Wyczyszczenie tablicy wybranych liter
+                selected_count = 0;
+                for (int i = 0; i < MAX_SELECTED; ++i) {
+                    selected_letters[i] = nullptr;
+                }
+
+                move(height - 1, 0);
+                clrtoeol();
+                refresh();
+            }
+        } else if (ch == 'x') {
             break;
         }
     }
