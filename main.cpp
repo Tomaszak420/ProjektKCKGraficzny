@@ -36,15 +36,15 @@ int znajdzWybranaLitere(const char* wybrane_litery[], int liczba_wybranych, cons
 // Funkcja wyświetlająca interfejs użytkownika
 void wyswietlUI(int liczba_znalezionych_slow) {
     mvprintw(0, 0, "Kontrolki: ");
-    mvprintw(1, 0, "Strzałki - Poruszanie się");
-    mvprintw(2, 0, "Enter - żeby wybrać");
-    mvprintw(3, 0, "W - sprawdź słowo");
-    mvprintw(4, 0, "R - Restart gry |Dodać|");
-    mvprintw(5, 0, "L - sprawdź leaderboard |Dodać|");
-    mvprintw(6, 0, "X - żeby zakończyć");
+    mvprintw(1, 0, "Strzalki - Poruszanie sie");
+    mvprintw(2, 0, "Enter - zeby wybrac");
+    mvprintw(3, 0, "W - sprawdź slowo");
+    mvprintw(4, 0, "R - Restart gry |Dodac|");
+    mvprintw(5, 0, "L - sprawdź leaderboard |Dodac|");
+    mvprintw(6, 0, "X - zeby zakonczyc");
 
     mvprintw(0, COLS / 2, "Boggle");
-    mvprintw(0, COLS - 20, "Słowa znalezione: %d", liczba_znalezionych_slow);
+    mvprintw(0, COLS - 20, "Slowa znalezione: %d", liczba_znalezionych_slow);
     refresh();
 }
 
