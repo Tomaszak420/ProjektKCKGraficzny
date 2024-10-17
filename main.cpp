@@ -6,6 +6,14 @@
 #include <cstring>
 using namespace std;
 
+bool hasBeenSelected(struct coordinates* coords_so_far, int selected_count, int cursor_y, int cursor_x);
+bool isValidSelection(struct coordinates* coords_so_far, int selected_count, int cursor_y, int cursor_x);
+
+struct coordinates {
+    int x;
+    int y;
+};
+
 // Funkcja sprawdzająca, czy słowo znajduje się w słowniku
 bool sprawdzSlowoWSlowniku(const char* slowo) {
     ifstream plik("../dictionary.txt");
@@ -78,6 +86,17 @@ int main() {
     keypad(stdscr, TRUE);
     curs_set(0);
 
+    //Inicjalizacja pod obsluge koloru
+    if(has_colors() == FALSE)
+	{	endwin();
+		printf("Your terminal does not support color\n");
+		return 1;
+	}
+	start_color();
+    init_pair(1, COLOR_YELLOW, COLOR_BLACK);
+    init_pair(2, COLOR_GREEN, COLOR_BLACK);
+
+
     int wysokosc, szerokosc;
     getmaxyx(stdscr, wysokosc, szerokosc);
 
@@ -92,6 +111,9 @@ int main() {
     // Tablica na wybrane litery
     const int MAX_WYBRANYCH = 16;
     const char* wybrane_litery[MAX_WYBRANYCH];
+    struct coordinates selected_coordinates[16];
+    //int selected_count = 0;
+
     int liczba_wybranych = 0;
     int liczba_znalezionych_slow = 0;
 
@@ -115,16 +137,22 @@ int main() {
         // Wyświetlanie liter z podświetleniem
         for (int i = 0; i < RZEDY; ++i) {
             for (int j = 0; j < KOLUMNY; ++j) {
-                if (i + 1 == kursor_y && j * 5 + 1 == kursor_x) {
-                    wattron(okno, A_REVERSE);  // Podświetlenie kursora
-                } else if (podswietlone[i][j]) {
-                    wattron(okno, A_REVERSE);  // Podświetlenie wybranej litery
+                if (i + 1 == kursor_y && j * 5 + 1 == kursor_x)
+                {
+                    wattron(okno, A_REVERSE | COLOR_PAIR(1));  // Podświetlenie kursora
+                //} else if (podswietlone[i][j]) {
+                }
+                else if  (hasBeenSelected(selected_coordinates, liczba_wybranych, i, j))
+                {
+                    wattron(okno, A_REVERSE | COLOR_PAIR(2));  // Podświetlenie wybranej litery
                 }
                 mvwprintw(okno, i + 1, j * 5 + 1, "| %s |", litery[i][j].c_str());
-                wattroff(okno, A_REVERSE);
-                wattroff(okno, A_REVERSE);
+                wattroff(okno, A_REVERSE | COLOR_PAIR(1));
+                //wattroff(okno, A_REVERSE | COLOR_PAIR(2));
             }
         }
+
+
         wrefresh(okno);
 
         // Wyświetl UI
@@ -142,7 +170,7 @@ int main() {
         } else if (ch == KEY_RIGHT && kursor_x < 1 + (KOLUMNY - 1) * 5) {
             kursor_x += 5;
         } else if (ch == 10) {  // Enter
-            int liter_x = (kursor_x - 1) / 5; //Wybiera SAMĄ litere bez tych ramek
+            /*int liter_x = (kursor_x - 1) / 5; //Wybiera SAMĄ litere bez tych ramek
             int liter_y = kursor_y - 1;
 
             // Sprawdzenie, czy litera już została wybrana
@@ -162,6 +190,28 @@ int main() {
                     wybrane_litery[liczba_wybranych++] = litery[liter_y][liter_x].c_str();
                     podswietlone[liter_y][liter_x] = true;  // Zaznacz podświetlenie
                 }
+            }*/
+
+            int letter_x = (kursor_x - 1) / 5;
+            int letter_y = kursor_y - 1;
+
+            // Sprawdza, czy mozna dana litere dodac do ciagu
+            if (isValidSelection(selected_coordinates, liczba_wybranych, letter_y, letter_x))
+            {
+
+                wybrane_litery[liczba_wybranych] = litery[letter_y][letter_x].c_str();  // Dodanie wybranej litery do wypisania/sprawdzenia
+
+                selected_coordinates[liczba_wybranych].y = letter_y; // Zapisanie koordynatow nowej litery
+                selected_coordinates[liczba_wybranych].x = letter_x;
+
+                liczba_wybranych++;
+
+                move(wysokosc - 1, 0);  // Przesunięcie kursora na dół ekranu na chwile żeby wpisało litere
+
+                for (int i = 0; i < liczba_wybranych; ++i) {
+                    printw("%s ", wybrane_litery[i]);  // Wyświetlanie wybranych liter
+                }
+                refresh();
             }
 
             move(wysokosc - 1, 0);
@@ -212,8 +262,52 @@ int main() {
         } else if (ch == 'x') {
             break;
         }
-    }
 
+    }
     endwin();
     return 0;
+}
+
+
+//Jesli wybrana litere mozna dodac do ciagu, zwraca true. W przeciwnym razie - false.
+bool isValidSelection(struct coordinates* coords_so_far, int selected_count, int cursor_y, int cursor_x)
+{
+
+    //Jesli to pierwsza zaznaczona litera - zawsze mozna ja dodac
+    if (selected_count == 0) return true;
+
+    //Jesli zoatala juz zaznaczona, zwraca false
+    if (hasBeenSelected(coords_so_far, selected_count, cursor_y, cursor_x))
+    {
+        return false;
+    }
+
+    //Obliczenie odleglosci miedzy ostatnia dodana litera, a zaznaczona teraz
+    int head_y = coords_so_far[selected_count - 1].y;
+    int head_x = coords_so_far[selected_count - 1].x;
+    int distance_y = abs(cursor_y - head_y);
+    int distance_x = abs(cursor_x - head_x);
+
+    //Jesli litera nie znajduje sie w bezposrednim sasiedztwie ostatnio dodanej litery, nie mozna jej dodac.
+    if (distance_y > 1 || distance_x > 1) return false;
+
+    //Litera moze byc dodana.
+    return true;
+}
+
+//Jesli litera zostala juz zaznaczona, zwraca true. W przeciwnym razie - false
+bool hasBeenSelected(struct coordinates* coords_so_far, int selected_count, int cursor_y, int cursor_x)
+{
+    //Przechodzi przez wszystkie zaznaczone do tej pory pola
+    for (int i = 0; i < selected_count; i++)
+    {
+        //Jesli litera zostala juz zaznaczona
+        if (cursor_y == coords_so_far[i].y && cursor_x == coords_so_far[i].x)
+        {
+            return true;
+        }
+    }
+
+    //Litera nie zostala jeszcze zaznaczona
+    return false;
 }
