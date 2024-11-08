@@ -1,5 +1,6 @@
 #include <string>
 #include <vector>
+#include <algorithm>
 #include "Dictionary.h"
 
 #define KOLUMNY 4
@@ -7,15 +8,26 @@
 
 using namespace std;
 
-class BoardAnalyzer {
+#ifndef BOARDANALYZER_H
+#define BOARDANALYZER_H
+
+class BoardAnalyzer 
+{
     string board[RZEDY][KOLUMNY];
     Dictionary dictionary;
     vector<string> all_words;
-    vector<string> visited;
-
+    vector<int> visited;
     vector<vector<int>> neighbor_list;
+
+    void fillNeighborList();
+    void findAllWords();
+    void searchNode(int node_number);
+    string visitedLettersAsString();
+    void removeDuplicates();
 
 public:
     BoardAnalyzer(string board[RZEDY][KOLUMNY], string dictionary_file_path);
-    void fillNeighborList();
+    vector<string> getAllWords();
 };
+
+#endif
