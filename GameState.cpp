@@ -61,14 +61,33 @@ bool GameState::isValidSelection(struct coordinates selected_letter)
 
 void GameState::tryAddLetter(struct coordinates cursor) 
 {
-    struct coordinates letter = {(cursor.x - 1) / 5, cursor.y - 1};
+    struct coordinates letter = {cursor.y - 1, (cursor.x - 1) / 5};
 
     if (isValidSelection(letter))
     {
         selected_coordinates.push_back(letter);
 
-        selected_letters.push_back(board[letter.y][letter.x]);
+        selected_letters.push_back(board[letter.x][letter.y]);
     }
+}
+
+void GameState::startGame() {
+    fillBoard();
+    BoardAnalyzer analyzer(board, "./dictionary.txt");
+    all_words = analyzer.getAllWords();
+}
+
+bool GameState::isOnBoard(string word)
+{
+
+    for (string word_on_board : all_words)
+    {
+        if (word_on_board == word)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 //TODO
@@ -88,7 +107,7 @@ void GameState::restartGame() {
     clearSelection();
     found_words.clear();
 
-    fillBoard();
+    startGame();
 }
 
 string GameState::getSelectedWord()

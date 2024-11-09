@@ -1,9 +1,6 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
-#include <iostream>
-#include <cstdlib>
-#include <ctime>
 #include <ncurses.h>
 #include <fstream>
 #include <cstring>
@@ -14,6 +11,7 @@
 #include "ScreenChoice.h"
 #include "Coordinates.h"
 #include "GameState.h"
+#include "BoardAnalyzer.h"
 
 using namespace std;
 
@@ -21,7 +19,7 @@ using namespace std;
 #define RZEDY 4
 #define MAX_WYBRANYCH 16
 
-// Funkcja wyswietlajaca plansze
+// UI: Funkcja wyswietlajaca plansze
 void displayBoard(string board[4][4], WINDOW* okno) {
 
     for (int i = 0; i < RZEDY; ++i) {
@@ -32,13 +30,13 @@ void displayBoard(string board[4][4], WINDOW* okno) {
     wrefresh(okno);
 }
 
-// Wyswietla liczbe znlezionych slow
+// UI: Wyswietla liczbe znlezionych slow
 void updateFoundWordsCounterDisplay(int liczba_znalezionych_slow) {
     mvprintw(0, COLS - 20, "Slowa znalezione: %d", liczba_znalezionych_slow);
     refresh();
 }
 
-// Wyświetlanie listy znalezionych słów
+// UI: Wyświetlanie listy znalezionych słów
 void wyswietlListeZnalezionychSlow(WINDOW *lista_okno, vector<string> found_words)
 {
     werase(lista_okno);    // Czyszczenie okna
@@ -53,7 +51,7 @@ void wyswietlListeZnalezionychSlow(WINDOW *lista_okno, vector<string> found_word
     wrefresh(lista_okno);
 }
 
-// Wyswietla instrukcje gry
+// UI: Wyswietla instrukcje gry
 void gameScreenInit() {
     mvprintw(0, 0, "Kontrolki: ");
     mvprintw(1, 0, "Strzalki - Poruszanie sie");
@@ -68,7 +66,7 @@ void gameScreenInit() {
 
 // Wyswietla plansze/aktualizuje jej wyglad
 void updateBoard(WINDOW *plansza_okno, GameState state, struct coordinates cursor)
-{
+{   
     for (int i = 0; i < RZEDY; ++i)
     {
         for (int j = 0; j < KOLUMNY; ++j)
@@ -79,7 +77,7 @@ void updateBoard(WINDOW *plansza_okno, GameState state, struct coordinates curso
                 wattron(plansza_okno, A_REVERSE | COLOR_PAIR(1)); // Podświetlenie kursora
             }
             // Jesli ta litera zostala wybrana
-            else if (state.hasBeenSelected( { i, j } ))
+            else if (state.hasBeenSelected( { i , j } ))
             {
                 wattron(plansza_okno, A_REVERSE | COLOR_PAIR(2)); // Podświetlenie wybranej litery
             }
@@ -103,30 +101,6 @@ void restartGameDisplay(GameState state, WINDOW *lista_okno, WINDOW *plansza_okn
     clrtoeol();
 }
 
-// Funkcja sprawdzająca, czy słowo znajduje się w słowniku
-bool sprawdzSlowoWSlowniku(string slowo) {
-    ifstream plik("./dictionary.txt");
-    if (!plik.is_open()) {
-        cerr << "Błąd otwierania pliku" << endl;
-        return false;
-    }
-    int length = slowo.length();
-    string linia;
-    int counter = 0;
-    while (getline(plik, linia)) {
-
-        // Wywolanie erase() sluzy do obciecia znaku '\r' ('\n' obcial juz getline)
-        linia.erase(remove(linia.begin(), linia.end(), '\r' ), linia.end());
-        if (linia == slowo) {
-            plik.close();
-            return true;
-        }
-    }
-
-    plik.close();
-    return false;
-}
-
 void tryAddSelectedWord(GameState *state, WINDOW *lista_okno)
 {
     // Obsługa sprawdzania słowa
@@ -134,7 +108,7 @@ void tryAddSelectedWord(GameState *state, WINDOW *lista_okno)
     {
         string slowo = state->getSelectedWord();
 
-        if (sprawdzSlowoWSlowniku(slowo))
+        if (state->isOnBoard(slowo))
         {
             // Proba dodania slowa do listy
             bool success = state->tryAddSelectedWord();
@@ -174,6 +148,7 @@ void enterInteractionLoop(WINDOW *plansza_okno, WINDOW *lista_okno, GameState st
 
         updateFoundWordsCounterDisplay(state.found_words.size());
 
+
         int ch = getch();
 
         // Obsługa ruchu kursora
@@ -203,7 +178,7 @@ void enterInteractionLoop(WINDOW *plansza_okno, WINDOW *lista_okno, GameState st
             tryAddSelectedWord(&state, lista_okno);
         }
         else if (ch == 'r' || ch == 'R')
-        {
+        {   
             state.restartGame();
             restartGameDisplay(state, lista_okno, plansza_okno);
         }
@@ -222,6 +197,7 @@ ScreenChoice game() {
     refresh();
 
     GameState state;
+    state.startGame();
 
     int start_y = (LINES - 4) / 2;
     int start_x = (COLS - 8) / 2;
@@ -235,8 +211,6 @@ ScreenChoice game() {
     box(lista_okno, 0, 0);
     mvwprintw(lista_okno, 0, 1, "Znalezione slowa");
     wrefresh(lista_okno);
-
-    state.fillBoard();
 
     displayBoard(state.board, plansza_okno);
 

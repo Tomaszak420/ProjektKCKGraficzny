@@ -1,6 +1,7 @@
 #include <string>
 #include <vector>
 
+#include "BoardAnalyzer.h"
 #include "Coordinates.h"
 
 #define KOLUMNY 4
@@ -21,7 +22,8 @@ class GameState {
         vector<string> selected_letters;
         int points;
 
-
+        void startGame();
+        bool isOnBoard(string word);
         void fillBoard();
         bool hasBeenSelected(struct coordinates cursor);
         bool isValidSelection(struct coordinates selected_letter);
