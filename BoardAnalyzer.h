@@ -21,9 +21,10 @@ class BoardAnalyzer
 
     void fillNeighborList();
     void findAllWords();
+    void removeDuplicates();
     void searchNode(int node_number);
     string visitedLettersAsString();
-    void removeDuplicates();
+
 
 public:
     BoardAnalyzer(string board[RZEDY][KOLUMNY], string dictionary_file_path);
