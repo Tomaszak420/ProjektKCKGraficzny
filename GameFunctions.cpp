@@ -66,7 +66,7 @@ void gameScreenInit() {
 
 // Wyswietla plansze/aktualizuje jej wyglad
 void updateBoard(WINDOW *plansza_okno, GameState state, struct coordinates cursor)
-{   
+{
     for (int i = 0; i < RZEDY; ++i)
     {
         for (int j = 0; j < KOLUMNY; ++j)
@@ -141,8 +141,36 @@ void enterInteractionLoop(WINDOW *plansza_okno, WINDOW *lista_okno, GameState st
 {
     struct coordinates cursor = {1, 1};
 
+    auto startTime = std::chrono::steady_clock::now();
+    auto lastTime = startTime;
+    bool timeoutTimerRunning = true;
+    bool updateTimerRunning = true;
+
     while (true)
     {
+        if (timeoutTimerRunning)
+        {
+            auto now = std::chrono::steady_clock::now();
+
+            if (std::chrono::duration_cast<std::chrono::seconds>(now - startTime) >= std::chrono::minutes(1))
+            {
+                mvprintw(LINES - 4 , 0, "CZAS MINAL!!!");
+                refresh();
+                timeoutTimerRunning = false;
+                updateTimerRunning = false;
+                break;
+            }
+
+            if (std::chrono::duration_cast<std::chrono::seconds>(now - lastTime) >= std::chrono::seconds(1))
+            {
+                int minutes = std::chrono::duration_cast<std::chrono::minutes>(now - startTime).count();
+                int seconds = std::chrono::duration_cast<std::chrono::seconds>(now - startTime).count();
+                mvprintw(LINES - 3 , 0, "%d:%d", minutes, seconds);
+                refresh();
+            }
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        }
 
         updateBoard(plansza_okno, state, cursor);
 
@@ -178,7 +206,7 @@ void enterInteractionLoop(WINDOW *plansza_okno, WINDOW *lista_okno, GameState st
             tryAddSelectedWord(&state, lista_okno);
         }
         else if (ch == 'r' || ch == 'R')
-        {   
+        {
             state.restartGame();
             restartGameDisplay(state, lista_okno, plansza_okno);
         }
@@ -216,7 +244,8 @@ ScreenChoice game() {
 
     gameScreenInit();
 
+    nodelay(stdscr, TRUE);
     enterInteractionLoop(plansza_okno, lista_okno, state);
-
+    nodelay(stdscr, FALSE);
     return EXIT;
 }
