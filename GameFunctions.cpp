@@ -12,6 +12,11 @@
 #include "Coordinates.h"
 #include "GameState.h"
 #include "BoardAnalyzer.h"
+#include <bits/chrono.h>
+#include <future>
+#include <thread>
+#include "Leaderboard.h"
+//#include "Timer.h"
 
 using namespace std;
 
@@ -137,10 +142,9 @@ void tryAddSelectedWord(GameState *state, WINDOW *lista_okno)
 }
 
 // Funkcja główna z pętlą gry
-void enterInteractionLoop(WINDOW *plansza_okno, WINDOW *lista_okno, GameState state)
+void enterInteractionLoop(WINDOW *plansza_okno, WINDOW *lista_okno, GameState *state)
 {
     struct coordinates cursor = {1, 1};
-
     auto startTime = std::chrono::steady_clock::now();
     auto lastTime = startTime;
     bool timeoutTimerRunning = true;
@@ -152,7 +156,7 @@ void enterInteractionLoop(WINDOW *plansza_okno, WINDOW *lista_okno, GameState st
         {
             auto now = std::chrono::steady_clock::now();
 
-            if (std::chrono::duration_cast<std::chrono::seconds>(now - startTime) >= std::chrono::minutes(1))
+            if (std::chrono::duration_cast<std::chrono::seconds>(now - startTime) >= std::chrono::seconds(20))
             {
                 mvprintw(LINES - 4 , 0, "CZAS MINAL!!!");
                 refresh();
@@ -172,10 +176,9 @@ void enterInteractionLoop(WINDOW *plansza_okno, WINDOW *lista_okno, GameState st
             std::this_thread::sleep_for(std::chrono::milliseconds(50));
         }
 
-        updateBoard(plansza_okno, state, cursor);
+        updateBoard(plansza_okno, *state, cursor);
 
-        updateFoundWordsCounterDisplay(state.found_words.size());
-
+        updateFoundWordsCounterDisplay(state->found_words.size());
 
         int ch = getch();
 
@@ -198,28 +201,28 @@ void enterInteractionLoop(WINDOW *plansza_okno, WINDOW *lista_okno, GameState st
         }
         else if (ch == 10) // Enter
         {
-            state.tryAddLetter(cursor);
+            state->tryAddLetter(cursor);
         }
         else if (ch == 'w' || ch == 'W')
         {
             // TODO
-            tryAddSelectedWord(&state, lista_okno);
+            tryAddSelectedWord(state, lista_okno);
         }
         else if (ch == 'r' || ch == 'R')
         {
-            state.restartGame();
-            restartGameDisplay(state, lista_okno, plansza_okno);
+            state->restartGame();
+            restartGameDisplay(*state, lista_okno, plansza_okno);
         }
         else if (ch == 'x' || ch == 'X')
         {
             break;
         }
 
-        int a = 5;
     }
+
 }
 
-ScreenChoice game() {
+ScreenChoice game(Leaderboard *leaderbaord) {
 
     clear();
     refresh();
@@ -231,7 +234,6 @@ ScreenChoice game() {
     int start_x = (COLS - 8) / 2;
 
     WINDOW* plansza_okno = newwin(6, 22, start_y - 1, start_x - 1);
-    //refresh();
     box(plansza_okno, 0, 0);
     wrefresh(plansza_okno);
 
@@ -245,7 +247,18 @@ ScreenChoice game() {
     gameScreenInit();
 
     nodelay(stdscr, TRUE);
-    enterInteractionLoop(plansza_okno, lista_okno, state);
+    enterInteractionLoop(plansza_okno, lista_okno, &state);
     nodelay(stdscr, FALSE);
-    return EXIT;
+
+    int score = state.calculateScore();
+
+    if (leaderbaord->doesChangeLeaderboard(score))
+    {
+        leaderbaord->setScoreBuffer(score);
+        return LEADERBOARD_UPDATE;
+    }
+    else
+    {
+        return MENU;
+    }
 }

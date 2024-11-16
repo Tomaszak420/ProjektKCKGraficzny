@@ -1,4 +1,4 @@
 #include "ScreenChoice.h"
 #include "Leaderboard.h"
 
-ScreenChoice game(Leaderboard *lb);
+ScreenChoice leaderboardUpdate(Leaderboard *lb);
