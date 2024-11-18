@@ -146,3 +146,36 @@ void GameState::clearSelection() {
 vector<struct coordinates> GameState::getSelectedCoordinates() {
     return selected_coordinates;
 }
+
+int GameState::calculateScore() 
+{
+    int score = 0;
+
+    for (string word : found_words)
+    {
+        int length = word.length();
+
+        if (length <= 4)
+        {
+            score += 1;
+        }
+        else if (length == 5)
+        {
+            score += 2;
+        }
+        else if (length == 6)
+        {
+            score += 3;
+        }
+        else if (length == 7)
+        {
+            score += 5;
+        }
+        else
+        {
+            score += 11;
+        }
+    }
+
+    return score;
+}

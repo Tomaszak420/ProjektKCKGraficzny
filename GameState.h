@@ -35,6 +35,7 @@ class GameState {
         bool isFoundWord(string word);
         void clearSelection();
         vector<struct coordinates> getSelectedCoordinates();
+        int calculateScore();
 
 };
 
