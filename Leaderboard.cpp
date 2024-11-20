@@ -21,20 +21,20 @@ bool Leaderboard::doesChangeLeaderboard(int new_score)
     return false;
 }
 
-void Leaderboard::insertScore(std::string name, int new_score) 
+void Leaderboard::insertScore(std::string name, int new_score)
 {
     std::vector<struct LeaderboardItem>::iterator it;
     LeaderboardItem new_item = { name, new_score };
 
-    for (it = items.begin(); it < items.end(); it++) 
+    for (it = items.begin(); it < items.end(); it++)
     {
         if (it->score < new_score)
-        {   
+        {
             items.insert(it, new_item);
         }
     }
 
-    if (items.size() > max_length) 
+    if (items.size() > max_length)
     {
         items.pop_back();
     }
@@ -45,22 +45,22 @@ void Leaderboard::insertScore(std::string name, int new_score)
     }
 }
 
-std::vector<struct LeaderboardItem> Leaderboard::getItemsList() 
+std::vector<struct LeaderboardItem> Leaderboard::getItemsList()
 {
     return items;
 }
 
-int Leaderboard::getMaxLength() 
+int Leaderboard::getMaxLength()
 {
     return max_length;
 }
 
-void Leaderboard::setScoreBuffer(int new_score) 
+void Leaderboard::setScoreBuffer(int new_score)
 {
     score_buffer = new_score;
 }
 
-int Leaderboard::getScoreBuffer() 
+int Leaderboard::getScoreBuffer()
 {
     return score_buffer;
 }

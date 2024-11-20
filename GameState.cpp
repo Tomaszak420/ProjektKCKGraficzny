@@ -30,7 +30,7 @@ bool GameState::hasBeenSelected(struct coordinates cursor)
 {
     for (struct coordinates coordinate : selected_coordinates)
     {
-        if (coordinate == cursor) 
+        if (coordinate == cursor)
         {
             return true;
         }
@@ -59,7 +59,7 @@ bool GameState::isValidSelection(struct coordinates selected_letter)
     return abs(last_x - selected_letter.x) <= 1 && abs(last_y - selected_letter.y) <= 1;
 }
 
-void GameState::tryAddLetter(struct coordinates cursor) 
+void GameState::tryAddLetter(struct coordinates cursor)
 {
     struct coordinates letter = {cursor.y - 1, (cursor.x - 1) / 5};
 
@@ -92,9 +92,9 @@ bool GameState::isOnBoard(string word)
 
 //TODO
 bool GameState::tryAddSelectedWord()
-{   
+{
     string word = getSelectedWord();
-    if (!isFoundWord(word)) 
+    if (!isFoundWord(word))
     {
         found_words.push_back(word);
         return true;
@@ -147,7 +147,7 @@ vector<struct coordinates> GameState::getSelectedCoordinates() {
     return selected_coordinates;
 }
 
-int GameState::calculateScore() 
+int GameState::calculateScore()
 {
     int score = 0;
 

@@ -156,7 +156,7 @@ void enterInteractionLoop(WINDOW *plansza_okno, WINDOW *lista_okno, GameState *s
         {
             auto now = std::chrono::steady_clock::now();
 
-            if (std::chrono::duration_cast<std::chrono::seconds>(now - startTime) >= std::chrono::seconds(20))
+            if (std::chrono::duration_cast<std::chrono::seconds>(now - startTime) >= std::chrono::seconds(360))
             {
                 mvprintw(LINES - 4 , 0, "CZAS MINAL!!!");
                 refresh();

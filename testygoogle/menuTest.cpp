@@ -1,18 +1,21 @@
 #include <ncurses.h>
 #include <string.h>
-#include "ScreenChoice.h"
+#include <assert.h>
+#include "../ScreenChoice.h"
+#include <gtest/gtest.h>
 
 #define BUTTON_HEIGHT LINES / 4
 #define BUTTON_WIDTH COLS / 2
+//#pragma once
 
 // Przechowuje logo graficzne
-const char* ascii_logo[] = {
-"oooooooooo                                      o888            ",
-" 888    888   ooooooo     oooooooo8   oooooooo8  888  ooooooooo8",
-" 888oooo88  888     888 888    88o  888    88o   888 888oooooo8 ",
-" 888    888 888     888  888oo888o   888oo888o   888 888        ",
-"o888ooo888    88ooo88   888     888 888     888 o888o  88oooo888",
-"                         888ooo888   888ooo888                  "
+const char *ascii_logo[] = {
+        "oooooooooo                                      o888            ",
+        " 888    888   ooooooo     oooooooo8   oooooooo8  888  ooooooooo8",
+        " 888oooo88  888     888 888    88o  888    88o   888 888oooooo8 ",
+        " 888    888 888     888  888oo888o   888oo888o   888 888        ",
+        "o888ooo888    88ooo88   888     888 888     888 o888o  88oooo888",
+        "                         888ooo888   888ooo888                  "
 };
 
 // Znajduje szerokosc logo
@@ -34,24 +37,23 @@ int getLogoWidth() {
 }
 
 // Wpisuje logo w docelowe okno
-void printASCIILogo(WINDOW* window) {
+void printASCIILogo(WINDOW *window) {
 
     int start_x = (COLS - getLogoWidth()) / 2;
     int start_y = LINES / 4 - 4;
 
     int logo_array_length = sizeof(ascii_logo) / sizeof(char *);
 
-    for (int i = 0; i < logo_array_length; i++)
-    {
+    for (int i = 0; i < logo_array_length; i++) {
         mvwprintw(window, start_y + i, start_x, ascii_logo[i]);
     }
 
 }
 
 // Tworzy okno zawierajace logo
-WINDOW* makeLogo() {
+WINDOW *makeLogo() {
 
-    WINDOW* logo = newwin(BUTTON_HEIGHT * 2 - 2, COLS - 2, 0, 0);
+    WINDOW *logo = newwin(BUTTON_HEIGHT * 2 - 2, COLS - 2, 0, 0);
     box(logo, 0, 0);
     printASCIILogo(logo);
 
@@ -59,15 +61,15 @@ WINDOW* makeLogo() {
 }
 
 // Tworzy pojedynczy przycisk
-void buttonInit(WINDOW** button, int y, int x, const char* text) {
+void buttonInit(WINDOW **button, int y, int x, const char *text) {
     *button = newwin(BUTTON_HEIGHT - 2, BUTTON_WIDTH - 2, y, x);
 
-    mvwprintw(*button, (BUTTON_HEIGHT - 2) / 2, (BUTTON_WIDTH - 2 - strlen(text))/ 2, text);
+    mvwprintw(*button, (BUTTON_HEIGHT - 2) / 2, (BUTTON_WIDTH - 2 - strlen(text)) / 2, text);
     box(*button, 0, 0);
 }
 
 // Tworzy przyciski i umieszcza je w tablicy
-void makeButtons(WINDOW* buttons[2][2]) {
+void makeButtons(WINDOW *buttons[2][2]) {
     buttonInit(&buttons[0][0], LINES / 2, 0, "GRAJ");
     buttonInit(&buttons[0][1], LINES / 2, COLS / 2, "LEADERBOARD");
     buttonInit(&buttons[1][0], (LINES / 2 + BUTTON_HEIGHT - 2), 0, "INSTRUKCJA GRY");
@@ -75,7 +77,7 @@ void makeButtons(WINDOW* buttons[2][2]) {
 }
 
 // Wyświetla przyciski
-void displayButtons(WINDOW* buttons[2][2]) {
+void displayButtons(WINDOW *buttons[2][2]) {
     wrefresh(buttons[0][0]);
     wrefresh(buttons[0][1]);
     wrefresh(buttons[1][0]);
@@ -83,7 +85,7 @@ void displayButtons(WINDOW* buttons[2][2]) {
 }
 
 // Glowna petla menu
-int enterInteractionLoop(WINDOW* buttons[2][2]) {
+int enterInteractionLoop(WINDOW *buttons[2][2]) {
 
     int cursor_x = 0, cursor_y = 0;
 
@@ -97,7 +99,7 @@ int enterInteractionLoop(WINDOW* buttons[2][2]) {
         wbkgd(buttons[cursor_y][cursor_x], COLOR_PAIR(4));
         wrefresh(buttons[cursor_y][cursor_x]);
 
-        switch(input) {
+        switch (input) {
             case KEY_UP:
                 cursor_y = 0;
                 break;
@@ -123,20 +125,19 @@ ScreenChoice convertUserChoice(int userChoice) {
 
     ScreenChoice choice;
 
-    switch (userChoice)
-    {
-    case 1:
-        choice = GAME;
-        break;
-    case 2:
-        choice = LEADERBOARD;
-        break;
-    case 3:
-        choice = INSTRUCTIONS;
-        break;
-    case 4:
-        choice = EXIT;
-        break;
+    switch (userChoice) {
+        case 1:
+            choice = GAME;
+            break;
+        case 2:
+            choice = LEADERBOARD;
+            break;
+        case 3:
+            choice = INSTRUCTIONS;
+            break;
+        case 4:
+            choice = EXIT;
+            break;
     }
     return choice;
 
@@ -149,7 +150,7 @@ ScreenChoice menu() {
     refresh();
 
     // Tworzy i wyswietla logo
-    WINDOW* logo = makeLogo();
+    WINDOW *logo = makeLogo();
     wrefresh(logo);
 
     // Tworzy i wyswietla przyciski
@@ -169,4 +170,33 @@ ScreenChoice menu() {
     ScreenChoice choice = convertUserChoice(userChoice);
 
     return choice;
+}
+
+TEST(MenuTests, GetLogoWidth) {
+    EXPECT_EQ(getLogoWidth(), 64);
+}
+
+TEST(MenuTests, ConvertUserChoice) {
+    EXPECT_EQ(convertUserChoice(1), GAME);
+    EXPECT_EQ(convertUserChoice(2), LEADERBOARD);
+    EXPECT_EQ(convertUserChoice(3), INSTRUCTIONS);
+    EXPECT_EQ(convertUserChoice(4), EXIT);
+}
+
+int main(int argc, char **argv) {
+    initscr();            // Initialize ncurses
+    cbreak();             // Disable line buffering
+    noecho();             // Disable echoing of characters
+    keypad(stdscr, TRUE); // Enable special keys to be recorded
+
+    start_color();
+    init_pair(3, COLOR_WHITE, COLOR_BLUE);
+    init_pair(4, COLOR_WHITE, COLOR_BLACK);
+
+    ::testing::InitGoogleTest(&argc, argv);
+    int test_result = RUN_ALL_TESTS();
+
+    endwin(); // End ncurses mode
+
+    return test_result;
 }

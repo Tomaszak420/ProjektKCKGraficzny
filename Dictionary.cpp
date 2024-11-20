@@ -3,14 +3,16 @@
 #include <string>
 #include <algorithm>
 
-Dictionary::Dictionary(string file_path) 
+
+Dictionary::Dictionary(string file_path)
 {
     this->file_path = file_path;
     loadWordList(file_path);
 }
 
+
 // Wczytuje listę słów z pliku do wektora "word_list". Zwraca false w przypadku niepowodzenia, w przeciwnym razie true.
-bool Dictionary::loadWordList(string file_path) 
+bool Dictionary::loadWordList(string file_path)
 {
     // Otwarcie pliku
     ifstream dictionary_file(file_path);
@@ -24,7 +26,7 @@ bool Dictionary::loadWordList(string file_path)
     // Wczytujemy plik linia po linii
     string line;
 
-    while (getline(dictionary_file, line)) 
+    while (getline(dictionary_file, line))
     {
         // getline usunie z końca znak '\n', ale nie pozbedzie sie '\r'. Trzeba to zrobic 'recznie':
         line.erase(remove(line.begin(), line.end(), '\r'), line.end());
@@ -36,6 +38,7 @@ bool Dictionary::loadWordList(string file_path)
     dictionary_file.close();
     return true;
 }
+
 
 // Jesli slowo jest w slowniku, zwraca jego indeks. Jesli nie ma, zwraca -1.
 int Dictionary::findWord(string word)
@@ -67,6 +70,7 @@ int Dictionary::findWord(string word)
     return -1;
 }
 
+
 // Szuka pierwszego slowa w slowniku rozpoczynajacego sie danym prefiksem
 // (Zakladamy, ze kazde slowo jest tez swoim wlasnym prefiksem, wiec jesli 'prefix' jest slowem w slowniku, to wlasnie ono zostanie zwrocone).
 int Dictionary::findWordThatStartsWith(string prefix)
@@ -89,15 +93,17 @@ int Dictionary::findWordThatStartsWith(string prefix)
     return l;
 }
 
+
 // Zwraca slowo znajdujace sie w slowniku pod danym indeksem. Jesli indeks wychodzi poza zakres, zwraca pusty string.
-string Dictionary::getWord(int index) 
+string Dictionary::getWord(int index)
 {
-    if (index >= 0 && index < word_list.size()) 
+    if (index >= 0 && index < word_list.size())
     {
         return word_list[index];
     }
     return "";
 }
+
 
 // Jesli slowo jest w slowniku, zwraca true. Jesli nie, zwraca false.
 bool Dictionary::hasWord(string word)

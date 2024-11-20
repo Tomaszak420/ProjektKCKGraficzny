@@ -10,6 +10,13 @@
 
 using namespace std;
 
+/**
+ * @brief Inicjalizuje bibliotekę ncurses.
+ *
+ * Ta funkcja ustawia środowisko ncurses poprzez inicjalizację ekranu,
+ * wyłączenie echo znaków, włączenie klawiatury numerycznej do wejścia,
+ * ukrycie kursora, rozpoczęcie funkcji kolorów i zdefiniowanie par kolorów.
+ */
 // Inicjalizacja ncurses
 void ncursesInit()
 {
@@ -25,6 +32,16 @@ void ncursesInit()
     init_pair(4, COLOR_WHITE, COLOR_BLACK);
 }
 
+/**
+ * @brief Funkcja główna inicjalizuje środowisko ncurses i steruje
+ *        przepływem aplikacji przez różne ekrany, takie jak
+ *        menu, gra, tabela wyników, aktualizacja tabeli wyników i instrukcje.
+ *
+ * Aplikacja działa w pętli, wywołując odpowiednie funkcje na podstawie
+ * bieżącego wyboru ekranu, aż użytkownik zdecyduje się zakończyć program.
+ *
+ * @return int Zwraca 0 po pomyślnym zakończeniu programu.
+ */
 int main()
 {
     srand(time(0));
@@ -39,21 +56,21 @@ int main()
     {
         switch (choice)
         {
-        case MENU:
-            choice = menu();
-            break;
-        case GAME:
-            choice = game(&lb);
-            break;
-        case LEADERBOARD:
-            choice = leaderboard(&lb);
-            break;
-        case LEADERBOARD_UPDATE:
-            choice = leaderboardUpdate(&lb);
-            break;
-        case INSTRUCTIONS:
-            choice = instructions();
-            break;
+            case MENU:
+                choice = menu();
+                break;
+            case GAME:
+                choice = game(&lb);
+                break;
+            case LEADERBOARD:
+                choice = leaderboard(&lb);
+                break;
+            case LEADERBOARD_UPDATE:
+                choice = leaderboardUpdate(&lb);
+                break;
+            case INSTRUCTIONS:
+                choice = instructions();
+                break;
         }
 
     } while (choice != EXIT);
@@ -61,3 +78,4 @@ int main()
     endwin();
     return 0;
 }
+
