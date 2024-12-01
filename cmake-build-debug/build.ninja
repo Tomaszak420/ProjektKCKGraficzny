@@ -205,8 +205,29 @@ build install/strip: phony CMakeFiles/install/strip.util
 
 build cmake_object_order_depends_target_Google_Tests_run: phony || cmake_object_order_depends_target_gtest cmake_object_order_depends_target_gtest_main
 
-build testygoogle/CMakeFiles/Google_Tests_run.dir/LeaderboardTest.cpp.o: CXX_COMPILER__Google_Tests_run_unscanned_Debug /home/tomaszak/Pulpit/ProjektKCK/testygoogle/LeaderboardTest.cpp || cmake_object_order_depends_target_Google_Tests_run
-  DEP_FILE = testygoogle/CMakeFiles/Google_Tests_run.dir/LeaderboardTest.cpp.o.d
+build testygoogle/CMakeFiles/Google_Tests_run.dir/menuTest.cpp.o: CXX_COMPILER__Google_Tests_run_unscanned_Debug /home/tomaszak/Pulpit/ProjektKCK/testygoogle/menuTest.cpp || cmake_object_order_depends_target_Google_Tests_run
+  DEP_FILE = testygoogle/CMakeFiles/Google_Tests_run.dir/menuTest.cpp.o.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -isystem /home/tomaszak/Pulpit/ProjektKCK/testygoogle/googletest-1.15.2/googletest-1.15.2/googletest/include -isystem /home/tomaszak/Pulpit/ProjektKCK/testygoogle/googletest-1.15.2/googletest-1.15.2/googletest
+  OBJECT_DIR = testygoogle/CMakeFiles/Google_Tests_run.dir
+  OBJECT_FILE_DIR = testygoogle/CMakeFiles/Google_Tests_run.dir
+
+build testygoogle/CMakeFiles/Google_Tests_run.dir/GameStateTest.cpp.o: CXX_COMPILER__Google_Tests_run_unscanned_Debug /home/tomaszak/Pulpit/ProjektKCK/testygoogle/GameStateTest.cpp || cmake_object_order_depends_target_Google_Tests_run
+  DEP_FILE = testygoogle/CMakeFiles/Google_Tests_run.dir/GameStateTest.cpp.o.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -isystem /home/tomaszak/Pulpit/ProjektKCK/testygoogle/googletest-1.15.2/googletest-1.15.2/googletest/include -isystem /home/tomaszak/Pulpit/ProjektKCK/testygoogle/googletest-1.15.2/googletest-1.15.2/googletest
+  OBJECT_DIR = testygoogle/CMakeFiles/Google_Tests_run.dir
+  OBJECT_FILE_DIR = testygoogle/CMakeFiles/Google_Tests_run.dir
+
+build testygoogle/CMakeFiles/Google_Tests_run.dir/BoardAnalyzer.cpp.o: CXX_COMPILER__Google_Tests_run_unscanned_Debug /home/tomaszak/Pulpit/ProjektKCK/testygoogle/BoardAnalyzer.cpp || cmake_object_order_depends_target_Google_Tests_run
+  DEP_FILE = testygoogle/CMakeFiles/Google_Tests_run.dir/BoardAnalyzer.cpp.o.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -isystem /home/tomaszak/Pulpit/ProjektKCK/testygoogle/googletest-1.15.2/googletest-1.15.2/googletest/include -isystem /home/tomaszak/Pulpit/ProjektKCK/testygoogle/googletest-1.15.2/googletest-1.15.2/googletest
+  OBJECT_DIR = testygoogle/CMakeFiles/Google_Tests_run.dir
+  OBJECT_FILE_DIR = testygoogle/CMakeFiles/Google_Tests_run.dir
+
+build testygoogle/CMakeFiles/Google_Tests_run.dir/Dictionary.cpp.o: CXX_COMPILER__Google_Tests_run_unscanned_Debug /home/tomaszak/Pulpit/ProjektKCK/testygoogle/Dictionary.cpp || cmake_object_order_depends_target_Google_Tests_run
+  DEP_FILE = testygoogle/CMakeFiles/Google_Tests_run.dir/Dictionary.cpp.o.d
   FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
   INCLUDES = -isystem /home/tomaszak/Pulpit/ProjektKCK/testygoogle/googletest-1.15.2/googletest-1.15.2/googletest/include -isystem /home/tomaszak/Pulpit/ProjektKCK/testygoogle/googletest-1.15.2/googletest-1.15.2/googletest
   OBJECT_DIR = testygoogle/CMakeFiles/Google_Tests_run.dir
@@ -220,9 +241,9 @@ build testygoogle/CMakeFiles/Google_Tests_run.dir/LeaderboardTest.cpp.o: CXX_COM
 #############################################
 # Link the executable testygoogle/Google_Tests_run
 
-build testygoogle/Google_Tests_run: CXX_EXECUTABLE_LINKER__Google_Tests_run_Debug testygoogle/CMakeFiles/Google_Tests_run.dir/LeaderboardTest.cpp.o | lib/libgtest.a lib/libgtest_main.a /usr/lib/x86_64-linux-gnu/libcurses.so /usr/lib/x86_64-linux-gnu/libform.so lib/libgtest.a || lib/libgtest.a lib/libgtest_main.a
+build testygoogle/Google_Tests_run: CXX_EXECUTABLE_LINKER__Google_Tests_run_Debug testygoogle/CMakeFiles/Google_Tests_run.dir/menuTest.cpp.o testygoogle/CMakeFiles/Google_Tests_run.dir/GameStateTest.cpp.o testygoogle/CMakeFiles/Google_Tests_run.dir/BoardAnalyzer.cpp.o testygoogle/CMakeFiles/Google_Tests_run.dir/Dictionary.cpp.o | lib/libgtest.a lib/libgtest_main.a /usr/lib/x86_64-linux-gnu/libcurses.so /usr/lib/x86_64-linux-gnu/libform.so lib/libgtest.a || lib/libgtest.a lib/libgtest_main.a
   FLAGS = -g
-  LINK_LIBRARIES = lib/libgtest.a  lib/libgtest_main.a  -lcurses  /usr/lib/x86_64-linux-gnu/libform.so  lib/libgtest.a
+  LINK_LIBRARIES = lib/libgtest.a  lib/libgtest_main.a  -lcurses  /usr/lib/x86_64-linux-gnu/libform.so  -lpthread  -lncurses  lib/libgtest.a
   OBJECT_DIR = testygoogle/CMakeFiles/Google_Tests_run.dir
   POST_BUILD = :
   PRE_LINK = :

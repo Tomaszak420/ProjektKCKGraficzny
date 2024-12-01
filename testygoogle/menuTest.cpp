@@ -1,202 +1,51 @@
-#include <ncurses.h>
-#include <string.h>
-#include <assert.h>
-#include "../ScreenChoice.h"
 #include <gtest/gtest.h>
+#include <ncurses.h>
+#include <cstring>
+#include "../ScreenChoice.h"
+#include "../MenuFunctions.cpp"
 
-#define BUTTON_HEIGHT LINES / 4
-#define BUTTON_WIDTH COLS / 2
-//#pragma once
+// Deklaracja zewnętrznego logo
+extern const char* ascii_logo[];
+int getLogoWidth();
+ScreenChoice convertUserChoice(int userChoice);
 
-// Przechowuje logo graficzne
-const char *ascii_logo[] = {
-        "oooooooooo                                      o888            ",
-        " 888    888   ooooooo     oooooooo8   oooooooo8  888  ooooooooo8",
-        " 888oooo88  888     888 888    88o  888    88o   888 888oooooo8 ",
-        " 888    888 888     888  888oo888o   888oo888o   888 888        ",
-        "o888ooo888    88ooo88   888     888 888     888 o888o  88oooo888",
-        "                         888ooo888   888ooo888                  "
-};
-
-// Znajduje szerokosc logo
-int getLogoWidth() {
-
-    int logo_array_length = sizeof(ascii_logo) / sizeof(char *);
-    int width = 0;
-
-    for (int i = 0; i < logo_array_length; i++) {
-
-        int current_line_length = strlen(ascii_logo[i]);
-
-        if (current_line_length > width) {
-            width = current_line_length;
-        }
-    }
-
-    return width;
+// Test funkcji getLogoWidth
+TEST(ScreenTests, GetLogoWidth) {
+    int expected_width = 64; // Szerokość najdłuższej linii w logo.
+    ASSERT_EQ(getLogoWidth(), expected_width);
+    std::cout << "Test GetLogoWidth passed successfully.\n";
 }
 
-// Wpisuje logo w docelowe okno
-void printASCIILogo(WINDOW *window) {
-
-    int start_x = (COLS - getLogoWidth()) / 2;
-    int start_y = LINES / 4 - 4;
-
-    int logo_array_length = sizeof(ascii_logo) / sizeof(char *);
-
-    for (int i = 0; i < logo_array_length; i++) {
-        mvwprintw(window, start_y + i, start_x, ascii_logo[i]);
-    }
-
+// Test funkcji convertUserChoice dla wszystkich opcji menu
+TEST(ScreenTests, ConvertUserChoice_Game) {
+    ASSERT_EQ(convertUserChoice(1), GAME);
+    std::cout << "Test ConvertUserChoice_Game passed successfully.\n";
 }
 
-// Tworzy okno zawierajace logo
-WINDOW *makeLogo() {
-
-    WINDOW *logo = newwin(BUTTON_HEIGHT * 2 - 2, COLS - 2, 0, 0);
-    box(logo, 0, 0);
-    printASCIILogo(logo);
-
-    return logo;
+TEST(ScreenTests, ConvertUserChoice_Leaderboard) {
+    ASSERT_EQ(convertUserChoice(2), LEADERBOARD);
+    std::cout << "Test ConvertUserChoice_Leaderboard passed successfully.\n";
 }
 
-// Tworzy pojedynczy przycisk
-void buttonInit(WINDOW **button, int y, int x, const char *text) {
-    *button = newwin(BUTTON_HEIGHT - 2, BUTTON_WIDTH - 2, y, x);
-
-    mvwprintw(*button, (BUTTON_HEIGHT - 2) / 2, (BUTTON_WIDTH - 2 - strlen(text)) / 2, text);
-    box(*button, 0, 0);
+TEST(ScreenTests, ConvertUserChoice_Instructions) {
+    ASSERT_EQ(convertUserChoice(3), INSTRUCTIONS);
+    std::cout << "Test ConvertUserChoice_Instructions passed successfully.\n";
 }
 
-// Tworzy przyciski i umieszcza je w tablicy
-void makeButtons(WINDOW *buttons[2][2]) {
-    buttonInit(&buttons[0][0], LINES / 2, 0, "GRAJ");
-    buttonInit(&buttons[0][1], LINES / 2, COLS / 2, "LEADERBOARD");
-    buttonInit(&buttons[1][0], (LINES / 2 + BUTTON_HEIGHT - 2), 0, "INSTRUKCJA GRY");
-    buttonInit(&buttons[1][1], LINES / 2 + BUTTON_HEIGHT - 2, COLS / 2, "WYJSCIE");
+TEST(ScreenTests, ConvertUserChoice_Exit) {
+    ASSERT_EQ(convertUserChoice(4), EXIT);
+    std::cout << "Test ConvertUserChoice_Exit passed successfully.\n";
 }
 
-// Wyświetla przyciski
-void displayButtons(WINDOW *buttons[2][2]) {
-    wrefresh(buttons[0][0]);
-    wrefresh(buttons[0][1]);
-    wrefresh(buttons[1][0]);
-    wrefresh(buttons[1][1]);
-}
 
-// Glowna petla menu
-int enterInteractionLoop(WINDOW *buttons[2][2]) {
+// Test funkcji makeLogo - sprawdza, czy okno zostało poprawnie utworzone
+TEST(ScreenTests, MakeLogo) {
+    initscr();
+    WINDOW* logo = makeLogo();
 
-    int cursor_x = 0, cursor_y = 0;
+    ASSERT_NE(logo, nullptr);
+    std::cout << "Test MakeLogo passed successfully.\n";
 
-    while (true) {
-
-        wbkgd(buttons[cursor_y][cursor_x], COLOR_PAIR(3));
-        wrefresh(buttons[cursor_y][cursor_x]);
-
-        int input = getch();
-
-        wbkgd(buttons[cursor_y][cursor_x], COLOR_PAIR(4));
-        wrefresh(buttons[cursor_y][cursor_x]);
-
-        switch (input) {
-            case KEY_UP:
-                cursor_y = 0;
-                break;
-            case KEY_DOWN:
-                cursor_y = 1;
-                break;
-            case KEY_LEFT:
-                cursor_x = 0;
-                break;
-            case KEY_RIGHT:
-                cursor_x = 1;
-                break;
-            case 10:
-                return (cursor_x + 1) + 2 * cursor_y;
-
-        }
-
-    }
-
-}
-
-ScreenChoice convertUserChoice(int userChoice) {
-
-    ScreenChoice choice;
-
-    switch (userChoice) {
-        case 1:
-            choice = GAME;
-            break;
-        case 2:
-            choice = LEADERBOARD;
-            break;
-        case 3:
-            choice = INSTRUCTIONS;
-            break;
-        case 4:
-            choice = EXIT;
-            break;
-    }
-    return choice;
-
-}
-
-ScreenChoice menu() {
-
-    // Czysci ekran, jesli wczesniej cos na nim bylo
-    clear();
-    refresh();
-
-    // Tworzy i wyswietla logo
-    WINDOW *logo = makeLogo();
-    wrefresh(logo);
-
-    // Tworzy i wyswietla przyciski
-    WINDOW *buttons[2][2];
-    makeButtons(buttons);
-    displayButtons(buttons);
-
-    int userChoice = enterInteractionLoop(buttons);
-
-    // Zwalnia pamiec zaalokowana na wyswietlane elementy
     delwin(logo);
-    delwin(buttons[0][0]);
-    delwin(buttons[0][1]);
-    delwin(buttons[1][0]);
-    delwin(buttons[1][1]);
-
-    ScreenChoice choice = convertUserChoice(userChoice);
-
-    return choice;
-}
-
-TEST(MenuTests, GetLogoWidth) {
-    EXPECT_EQ(getLogoWidth(), 64);
-}
-
-TEST(MenuTests, ConvertUserChoice) {
-    EXPECT_EQ(convertUserChoice(1), GAME);
-    EXPECT_EQ(convertUserChoice(2), LEADERBOARD);
-    EXPECT_EQ(convertUserChoice(3), INSTRUCTIONS);
-    EXPECT_EQ(convertUserChoice(4), EXIT);
-}
-
-int main(int argc, char **argv) {
-    initscr();            // Initialize ncurses
-    cbreak();             // Disable line buffering
-    noecho();             // Disable echoing of characters
-    keypad(stdscr, TRUE); // Enable special keys to be recorded
-
-    start_color();
-    init_pair(3, COLOR_WHITE, COLOR_BLUE);
-    init_pair(4, COLOR_WHITE, COLOR_BLACK);
-
-    ::testing::InitGoogleTest(&argc, argv);
-    int test_result = RUN_ALL_TESTS();
-
-    endwin(); // End ncurses mode
-
-    return test_result;
+    endwin();
 }

@@ -9,4 +9,5 @@ enum ScreenChoice {
     LEADERBOARD_UPDATE,
     INSTRUCTIONS,
 };
+
 #endif

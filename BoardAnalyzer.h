@@ -11,7 +11,7 @@ using namespace std;
 #ifndef BOARDANALYZER_H
 #define BOARDANALYZER_H
 
-class BoardAnalyzer 
+class BoardAnalyzer
 {
     string board[RZEDY][KOLUMNY];
     Dictionary dictionary;
@@ -19,16 +19,20 @@ class BoardAnalyzer
     vector<int> visited;
     vector<vector<int>> neighbor_list;
 
-    void fillNeighborList();
-    void findAllWords();
-    void removeDuplicates();
-    void searchNode(int node_number);
-    string visitedLettersAsString();
-
 
 public:
     BoardAnalyzer(string board[RZEDY][KOLUMNY], string dictionary_file_path);
     vector<string> getAllWords();
+
+    void fillNeighborList();
+
+    void findAllWords();
+
+    void removeDuplicates();
+
+    void searchNode(int node_number);
+
+    string visitedLettersAsString();
 };
 
 #endif
