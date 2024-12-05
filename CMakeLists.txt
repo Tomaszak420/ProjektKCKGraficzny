@@ -1,25 +1,72 @@
-cmake_minimum_required(VERSION 3.28)
-project(ProjektKCK)
+cmake_minimum_required(VERSION 3.16)
 
-set(CMAKE_CXX_STANDARD 20)
-set(SOURCES Leaderboard.cpp
-                LeaderboardFunctions.cpp
-                LeaderboardUpdateFunctions.cpp
-                GameFunctions.cpp 
-                GameState.cpp 
-                InstructionsFunctions.cpp
-                LeaderboardItem.h 
-                MenuFunctions.cpp
-                BoardAnalyzer.cpp
-                Dictionary.cpp
-                dictionary.txt)
+project(ProjektKCKGraficzny2 VERSION 0.1 LANGUAGES CXX)
 
-find_package(Curses REQUIRED)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
 
-include_directories(${CURSES_INCLUDE_DIR})
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_executable(ProjektKCK main.cpp ${SOURCES})
-add_subdirectory(testygoogle)
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/dictionary.txt DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
-target_link_libraries(ProjektKCK ${CURSES_LIBRARIES})
+set(PROJECT_SOURCES
+        main.cpp
+        mainwindow.cpp
+        mainwindow.h
+        mainwindow.ui
+)
+
+if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
+    qt_add_executable(ProjektKCKGraficzny2
+        MANUAL_FINALIZATION
+        ${PROJECT_SOURCES}
+        Dictionary.h GameFunctions.h GameState.h InstructionsFunctions.h Leaderboard.h LeaderboardUpdateFunctions.h
+        BoardAnalyzer.h MenuFunctions.h ScreenChoice.h
+    )
+# Define target properties for Android with Qt 6 as:
+#    set_property(TARGET ProjektKCKGraficzny2 APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
+#                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
+# For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
+else()
+    if(ANDROID)
+        add_library(ProjektKCKGraficzny2 SHARED
+            ${PROJECT_SOURCES}
+        )
+# Define properties for Android with Qt 5 after find_package() calls as:
+#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
+    else()
+        add_executable(ProjektKCKGraficzny2
+            ${PROJECT_SOURCES}
+        )
+    endif()
+endif()
+
+target_link_libraries(ProjektKCKGraficzny2 PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+
+# Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
+# If you are developing for iOS or macOS you should consider setting an
+# explicit, fixed bundle identifier manually though.
+if(${QT_VERSION} VERSION_LESS 6.1.0)
+  set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.ProjektKCKGraficzny2)
+endif()
+set_target_properties(ProjektKCKGraficzny2 PROPERTIES
+    ${BUNDLE_ID_OPTION}
+    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+    MACOSX_BUNDLE TRUE
+    WIN32_EXECUTABLE TRUE
+)
+
+include(GNUInstallDirs)
+install(TARGETS ProjektKCKGraficzny2
+    BUNDLE DESTINATION .
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+
+if(QT_VERSION_MAJOR EQUAL 6)
+    qt_finalize_executable(ProjektKCKGraficzny2)
+endif()
