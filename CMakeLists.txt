@@ -25,6 +25,10 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${PROJECT_SOURCES}
         Dictionary.h GameFunctions.h GameState.h InstructionsFunctions.h Leaderboard.h LeaderboardUpdateFunctions.h
         BoardAnalyzer.h MenuFunctions.h ScreenChoice.h
+        instructionswindow.h instructionswindow.cpp instructionswindow.ui
+
+
+
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET ProjektKCKGraficzny2 APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

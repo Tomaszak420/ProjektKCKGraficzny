@@ -25,9 +25,10 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    void setupUI();
 
 private:
-    void setupUI();
+
     void createLogo();
     ScreenChoice convertUserChoice(int userChoice);
     void onButtonClick(int buttonId);
