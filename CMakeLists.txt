@@ -27,6 +27,10 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         BoardAnalyzer.h MenuFunctions.h ScreenChoice.h
         instructionswindow.h instructionswindow.cpp instructionswindow.ui
 
+        Leaderboard.cpp
+        LeaderboardItem.h
+        leaderboardwindow.h leaderboardwindow.cpp leaderboardwindow.ui
+
 
 
     )

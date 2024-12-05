@@ -6,7 +6,7 @@
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
-
+#include "Leaderboard.h"
 enum ScreenChoice {
     GAME,
     LEADERBOARD,
@@ -28,7 +28,7 @@ public:
     void setupUI();
 
 private:
-
+    Leaderboard *lb;
     void createLogo();
     ScreenChoice convertUserChoice(int userChoice);
     void onButtonClick(int buttonId);

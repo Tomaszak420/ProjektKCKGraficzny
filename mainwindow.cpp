@@ -1,13 +1,16 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "instructionswindow.h"
+#include "leaderboardwindow.h"
 #include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
-    ui(new Ui::MainWindow)  // Inicjalizacja obiektu ui
+    ui(new Ui::MainWindow),
+    lb(new Leaderboard(10))// Inicjalizacja obiektu ui
 {
-    ui->setupUi(this);  // Ustawienie widżetów z pliku .ui
+
+    ui->setupUi(this);
     connect(ui->Graj, &QPushButton::clicked, this, [this]() { onButtonClick(1); });
     connect(ui->Leaderboard, &QPushButton::clicked, this, [this]() { onButtonClick(2); });
     connect(ui->InstrukcjaGry, &QPushButton::clicked, this, [this]() { onButtonClick(3); });
@@ -15,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
 }
 void MainWindow::setupUI()
 {
+
     // Usuwamy stare UI (jeśli istnieje)
     delete ui;
     ui = new Ui::MainWindow;
@@ -36,11 +40,17 @@ void MainWindow::onButtonClick(int buttonId)
     ScreenChoice choice = convertUserChoice(buttonId);
     switch (choice) {
     case GAME:
+    {
         QMessageBox::information(this, "Game", "Starting Game...");
         break;
+    }
     case LEADERBOARD:
-        QMessageBox::information(this, "Leaderboard", "Showing Leaderboard...");
+    {
+
+      LeaderboardWindow *leaderboardWindow = new LeaderboardWindow(lb, this);
+         setCentralWidget(leaderboardWindow);
         break;
+    }
     case INSTRUCTIONS: {
         InstructionsWindow *instructionsWindow = new InstructionsWindow(this);
         // Ustawiamy okno instrukcji jako centralny widget
