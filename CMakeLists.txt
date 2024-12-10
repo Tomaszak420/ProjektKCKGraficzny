@@ -23,13 +23,18 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(ProjektKCKGraficzny2
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        Dictionary.h GameFunctions.h GameState.h InstructionsFunctions.h Leaderboard.h LeaderboardUpdateFunctions.h
+        Dictionary.h GameFunctions.h GameState.h InstructionsFunctions.h Leaderboard.h
         BoardAnalyzer.h MenuFunctions.h ScreenChoice.h
         instructionswindow.h instructionswindow.cpp instructionswindow.ui
 
         Leaderboard.cpp
         LeaderboardItem.h
         leaderboardwindow.h leaderboardwindow.cpp leaderboardwindow.ui
+        gamewindow.h gamewindow.cpp gamewindow.ui
+        BoardAnalyzer.cpp GameState.cpp
+        Dictionary.cpp
+        dictionary.txt
+
 
 
 

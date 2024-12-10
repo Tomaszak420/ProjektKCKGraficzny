@@ -1,13 +1,16 @@
 #include "mainwindow.h"
+#include "gamewindow.h"
 #include "ui_mainwindow.h"
 #include "instructionswindow.h"
 #include "leaderboardwindow.h"
 #include <QMessageBox>
+#include"GameState.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
     ui(new Ui::MainWindow),
-    lb(new Leaderboard(10))// Inicjalizacja obiektu ui
+    lb(new Leaderboard(10)),
+gameState()
 {
 
     ui->setupUi(this);
@@ -41,7 +44,8 @@ void MainWindow::onButtonClick(int buttonId)
     switch (choice) {
     case GAME:
     {
-        QMessageBox::information(this, "Game", "Starting Game...");
+         GameWindow *gameWindow = new GameWindow(&gameState, this);
+        setCentralWidget(gameWindow);
         break;
     }
     case LEADERBOARD:
