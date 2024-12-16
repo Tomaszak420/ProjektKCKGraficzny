@@ -3,6 +3,7 @@
 #include <ctime>
 #include <algorithm>
 #include "GameState.h"
+#include <iostream>
 
 void GameState::fillBoard()
 {
@@ -73,7 +74,8 @@ void GameState::tryAddLetter(struct coordinates cursor)
 
 void GameState::startGame() {
     fillBoard();
-    BoardAnalyzer analyzer(board, "C:/Users/koksu/Desktop/ProjektKCKGraficzny2/dictionary.txt");
+    //C:/Users/koksu/Desktop/ProjektKCKGraficzny2/
+    BoardAnalyzer analyzer(board, "./dictionary.txt");
     all_words = analyzer.getAllWords();
 }
 
@@ -84,6 +86,7 @@ bool GameState::isOnBoard(string word)
     {
         if (word_on_board == word)
         {
+            cerr << "Word :" << word << ": is on board. (isOnBoard)" << endl;
             return true;
         }
     }
@@ -94,8 +97,10 @@ bool GameState::isOnBoard(string word)
 bool GameState::tryAddSelectedWord()
 {
     string word = getSelectedWord();
-    if (!isFoundWord(word))
+
+    if (!isFoundWord(word) && isOnBoard(word))
     {
+        cerr << "Word :" << word << ": is on board. (tryAdd)" << endl;
         found_words.push_back(word);
         return true;
     }
@@ -130,6 +135,7 @@ bool GameState::isFoundWord(string word)
 {
     for (string found_word : found_words)
     {
+        cerr << "Found word:" << found_word << endl;
         if (word == found_word)
         {
             return true;

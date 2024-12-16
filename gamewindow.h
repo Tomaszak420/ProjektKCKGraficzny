@@ -21,6 +21,7 @@ private slots:
     void handleCellClick();
     void checkWord();
     void updateFoundWords();
+    void clearFoundWords();
     void updateWordCounter();
     void restartGame();
     void onBackToMenuClicked();

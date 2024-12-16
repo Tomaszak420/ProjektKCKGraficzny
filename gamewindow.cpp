@@ -6,6 +6,7 @@
 #include "GameState.h"
 #include "mainwindow.h"
 #include "QTimer"
+#include <iostream>
 GameWindow::GameWindow(GameState *gameState, QWidget *parent)
     : QWidget(parent), state(gameState)
 {
@@ -51,6 +52,7 @@ GameWindow::GameWindow(GameState *gameState, QWidget *parent)
     timer->start(1000);
 
     // Wypełnij planszę
+    state->startGame();
     updateBoard();
 }
 
@@ -109,10 +111,12 @@ void GameWindow::checkWord()
 
     if (wordIsValid) 
     {
+        cerr << "Word is valid." << endl;
         updateFoundWords();
-        state->clearSelection();
+        updateWordCounter();
     }
 
+    state->clearSelection();
     clearBoard();
 }
 
@@ -142,12 +146,17 @@ void GameWindow::updateWordCounter()
     wordCounterLabel->setText(QString("Znalezione słowa: %1").arg(state->found_words.size()));
 }
 
+void GameWindow::clearFoundWords() 
+{
+    foundWordsList->clear();
+}
+
 void GameWindow::restartGame()
 {
 
     state->restartGame();
     updateBoard();
-    updateFoundWords();
+    clearFoundWords();
     updateWordCounter();
 }
 
