@@ -1,4 +1,4 @@
-#include "GameWindow.h"
+#include "gamewindow.h"
 #include <QGridLayout>
 #include <QPushButton>
 #include <QLabel>
@@ -103,12 +103,24 @@ void GameWindow::handleCellClick()
 //TODO Walidacja słowa/Walidacja możliwości dodania litery do słowa
 void GameWindow::checkWord()
 {
+    bool wordIsValid = state->tryAddSelectedWord();
 
+    if (wordIsValid) 
+    {
+        updateFoundWords();
+        state->clearSelection();
+    }
 }
 //TODO wypisanie słów
 void GameWindow::updateFoundWords()
 {
+    string word = state->getSelectedWord();
+    QString qword = QString::fromStdString(word);
 
+    QListWidgetItem *item = new QListWidgetItem();
+    item->setText(qword);
+
+    foundWordsList->addItem(item);
 }
 
 void GameWindow::updateWordCounter()

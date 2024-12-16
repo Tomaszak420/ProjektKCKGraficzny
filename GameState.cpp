@@ -61,7 +61,7 @@ bool GameState::isValidSelection(struct coordinates selected_letter)
 
 void GameState::tryAddLetter(struct coordinates cursor)
 {
-    struct coordinates letter = {cursor.y - 1, (cursor.x - 1) / 5};
+    struct coordinates letter = {cursor.x, cursor.y};//{cursor.y - 1, (cursor.x - 1) / 5};
 
     if (isValidSelection(letter))
     {
