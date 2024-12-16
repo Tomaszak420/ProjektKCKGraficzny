@@ -86,7 +86,7 @@ bool GameState::isOnBoard(string word)
     {
         if (word_on_board == word)
         {
-            cerr << "Word :" << word << ": is on board. (isOnBoard)" << endl;
+            //cerr << "Word :" << word << ": is on board. (isOnBoard)" << endl;
             return true;
         }
     }
@@ -100,7 +100,7 @@ bool GameState::tryAddSelectedWord()
 
     if (!isFoundWord(word) && isOnBoard(word))
     {
-        cerr << "Word :" << word << ": is on board. (tryAdd)" << endl;
+        //cerr << "Word :" << word << ": is on board. (tryAdd)" << endl;
         found_words.push_back(word);
         return true;
     }
@@ -135,7 +135,7 @@ bool GameState::isFoundWord(string word)
 {
     for (string found_word : found_words)
     {
-        cerr << "Found word:" << found_word << endl;
+        //cerr << "Found word:" << found_word << endl;
         if (word == found_word)
         {
             return true;

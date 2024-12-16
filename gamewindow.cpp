@@ -97,11 +97,16 @@ void GameWindow::handleCellClick()
         }
     }
 
-    // Zmieniamy kolor przycisku na zielony
-    clickedButton->setStyleSheet("background-color: green;");
+    
+    if (state->isValidSelection({row, col})) 
+    {
+        // Zmieniamy kolor przycisku na zielony
+        clickedButton->setStyleSheet("background-color: green;");
 
-    // Dodaj literę do gry
-    state->tryAddLetter({row, col});
+        // Dodaj literę do gry
+        state->tryAddLetter({row, col});
+    }
+
 }
 
 //TODO Walidacja słowa/Walidacja możliwości dodania litery do słowa
@@ -111,7 +116,7 @@ void GameWindow::checkWord()
 
     if (wordIsValid) 
     {
-        cerr << "Word is valid." << endl;
+        //cerr << "Word is valid." << endl;
         updateFoundWords();
         updateWordCounter();
     }
