@@ -74,6 +74,8 @@ void GameWindow::updateBoard()
             boardLayout->addWidget(cellButton, i, j);
         }
     }
+
+    clearBoard();
 }
 
 void GameWindow::handleCellClick()
@@ -110,7 +112,19 @@ void GameWindow::checkWord()
         updateFoundWords();
         state->clearSelection();
     }
+
+    clearBoard();
 }
+
+void GameWindow::clearBoard() 
+{
+    for (int i = 0; i < 4; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            boardLayout->itemAtPosition(i, j)->widget()->setStyleSheet("background-color: darkslategrey;");
+        }
+    }
+}
+
 //TODO wypisanie słów
 void GameWindow::updateFoundWords()
 {

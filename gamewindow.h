@@ -17,6 +17,7 @@ public:
 
 private slots:
     void updateBoard();
+    void clearBoard();
     void handleCellClick();
     void checkWord();
     void updateFoundWords();
