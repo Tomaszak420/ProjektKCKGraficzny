@@ -10,6 +10,8 @@ LeaderboardUpdateWindow::LeaderboardUpdateWindow(Leaderboard *lb, QWidget *paren
 {
     ui->setupUi(this);
 
+    ui->scoreLabel->setText(QString("Masz jeden z najlepszych wynikow: %1").arg(leaderboard->getScoreBuffer()));
+
     connect(ui->pushButton, &QPushButton::clicked, this, &LeaderboardUpdateWindow::goToLeaderboard);
 }
 
@@ -19,8 +21,13 @@ LeaderboardUpdateWindow::~LeaderboardUpdateWindow()
 }
 
 void LeaderboardUpdateWindow::goToLeaderboard() {
+    QString input = ui->lineEdit->text();
+    string name = input.toStdString();
+    
+    int score = leaderboard->getScoreBuffer();
+    leaderboard->insertScore(name, score);
+
     LeaderboardWindow *leaderboardWindow = new LeaderboardWindow(leaderboard, qobject_cast<MainWindow*>(parent()));
-    //setCentralWidget(leaderboardWindow);
     if (leaderboardWindow) {
         leaderboardWindow->show();
         this->close();

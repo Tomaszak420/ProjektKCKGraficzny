@@ -191,14 +191,11 @@ void GameWindow::updateTime()
 //TODO przejście do lb
 void GameWindow::endGame()
 {
+    lb->setScoreBuffer(state->calculateScore());
     LeaderboardUpdateWindow *leaderboardUpdateWindow = new LeaderboardUpdateWindow(lb, qobject_cast<MainWindow *>(parent()));
-    //LeaderboardWindow *leaderboardWindow = new LeaderboardWindow(lb, qobject_cast<MainWindow *>(parent()));
 
     if (leaderboardUpdateWindow) {
         leaderboardUpdateWindow->show();
-
-        //leaderboardWindow->show();
-
         this->close();
     }
 }
