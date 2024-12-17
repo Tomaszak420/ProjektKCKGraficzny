@@ -1,8 +1,8 @@
 #include <string>
 #include <vector>
 
-#include "BoardAnalyzer.h"
-#include "Coordinates.h"
+#include "../board/BoardAnalyzer.h"
+#include "../coordinates/Coordinates.h"
 
 #define KOLUMNY 4
 #define RZEDY 4

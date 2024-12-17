@@ -1,5 +1,5 @@
 #include "Leaderboard.h"
-#include"LeaderboardItem.h"
+#include "LeaderboardItem.h"
 Leaderboard::Leaderboard(int max_length)
 {
     this->max_length = max_length;

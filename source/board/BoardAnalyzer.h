@@ -1,7 +1,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-#include "Dictionary.h"
+#include "../dictionary/Dictionary.h"
 
 #define KOLUMNY 4
 #define RZEDY 4

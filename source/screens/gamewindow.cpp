@@ -3,13 +3,14 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QMessageBox>
-#include "GameState.h"
+#include "../game/GameState.h"
 #include "mainwindow.h"
 #include "leaderboardwindow.h"
 #include "leaderboardupdatewindow.h"
-#include "Leaderboard.h"
+#include "../leaderboard/Leaderboard.h"
 #include "QTimer"
 #include <iostream>
+
 GameWindow::GameWindow(Leaderboard *leaderboard, GameState *gameState, QWidget *parent)
     : QWidget(parent), state(gameState),  lb(leaderboard)
 {

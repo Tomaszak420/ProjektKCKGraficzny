@@ -6,8 +6,9 @@
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
-#include "Leaderboard.h"
-#include "GameState.h"
+#include "../leaderboard/Leaderboard.h"
+#include "../game/GameState.h"
+
 enum ScreenChoice {
     GAME,
     LEADERBOARD,

@@ -1,13 +1,14 @@
-#ifndef GAMEWINDOW_H
-#define GAMEWINDOW_H
-
 #include <QWidget>
 #include <QGridLayout>
 #include <QPushButton>
 #include <QLabel>
 #include <QListWidget>
-#include "GameState.h"
-#include "Leaderboard.h"
+
+#ifndef GAMEWINDOW_H
+#define GAMEWINDOW_H
+
+#include "../game/GameState.h"
+#include "../leaderboard/Leaderboard.h"
 
 class GameWindow : public QWidget
 {

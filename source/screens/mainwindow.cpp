@@ -4,7 +4,7 @@
 #include "instructionswindow.h"
 #include "leaderboardwindow.h"
 #include <QMessageBox>
-#include"GameState.h"
+#include "../game/GameState.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),

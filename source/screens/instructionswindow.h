@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QPushButton>
 #include <QLabel>
+#include <QAbstractAnimation>
 #include <QVBoxLayout>
 
 namespace Ui {

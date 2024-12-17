@@ -3,6 +3,7 @@
 #include "leaderboardwindow.h"
 #include "mainwindow.h"
 #include <iostream>
+#include <string>
 
 LeaderboardUpdateWindow::LeaderboardUpdateWindow(Leaderboard *lb, QWidget *parent)
     : QDialog(parent),

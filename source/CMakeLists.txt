@@ -1,0 +1,6 @@
+add_subdirectory(dictionary)
+add_subdirectory(game)
+add_subdirectory(leaderboard)
+add_subdirectory(screens)
+add_subdirectory(coordinates)
+add_subdirectory(board)

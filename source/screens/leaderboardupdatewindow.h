@@ -2,7 +2,7 @@
 #define LEADERBOARDUPDATEWINDOW_H
 
 #include <QDialog>
-#include "Leaderboard.h"
+#include "../leaderboard/Leaderboard.h"
 namespace Ui {
 class LeaderboardUpdateWindow;
 }

@@ -2,7 +2,7 @@
 #define LEADERBOARDWINDOW_H
 
 #include <QWidget>
-#include "Leaderboard.h"
+#include "../leaderboard/Leaderboard.h"
 
 namespace Ui {
 class LeaderboardWindow;
