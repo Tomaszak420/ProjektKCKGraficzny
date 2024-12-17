@@ -17,7 +17,7 @@ class InstructionsWindow : public QWidget
 public:
     explicit InstructionsWindow(QWidget *parent = nullptr);
     ~InstructionsWindow();
-     void goBackToMainWindow();
+    void goBackToMainWindow();
 
 private:
     Ui::InstructionsWindow *ui;

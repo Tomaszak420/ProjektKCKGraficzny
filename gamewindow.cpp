@@ -5,10 +5,13 @@
 #include <QMessageBox>
 #include "GameState.h"
 #include "mainwindow.h"
+#include "leaderboardwindow.h"
+#include "leaderboardupdatewindow.h"
+#include "Leaderboard.h"
 #include "QTimer"
 #include <iostream>
-GameWindow::GameWindow(GameState *gameState, QWidget *parent)
-    : QWidget(parent), state(gameState)
+GameWindow::GameWindow(Leaderboard *leaderboard, GameState *gameState, QWidget *parent)
+    : QWidget(parent), state(gameState),  lb(leaderboard)
 {
     // Ustawienia głównego układu
     auto *mainLayout = new QVBoxLayout(this);
@@ -46,7 +49,7 @@ GameWindow::GameWindow(GameState *gameState, QWidget *parent)
     state->fillBoard();
 
     // Timer
-    timeLeft = 60;
+    timeLeft = 5;
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &GameWindow::updateTime);
     timer->start(1000);
@@ -109,7 +112,7 @@ void GameWindow::handleCellClick()
 
 }
 
-//TODO Walidacja słowa/Walidacja możliwości dodania litery do słowa
+
 void GameWindow::checkWord()
 {
     bool wordIsValid = state->tryAddSelectedWord();
@@ -134,7 +137,6 @@ void GameWindow::clearBoard()
     }
 }
 
-//TODO wypisanie słów
 void GameWindow::updateFoundWords()
 {
     string word = state->getSelectedWord();
@@ -189,6 +191,14 @@ void GameWindow::updateTime()
 //TODO przejście do lb
 void GameWindow::endGame()
 {
+    LeaderboardUpdateWindow *leaderboardUpdateWindow = new LeaderboardUpdateWindow(lb, qobject_cast<MainWindow *>(parent()));
+    //LeaderboardWindow *leaderboardWindow = new LeaderboardWindow(lb, qobject_cast<MainWindow *>(parent()));
 
+    if (leaderboardUpdateWindow) {
+        leaderboardUpdateWindow->show();
 
+        //leaderboardWindow->show();
+
+        this->close();
+    }
 }

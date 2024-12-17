@@ -7,13 +7,14 @@
 #include <QLabel>
 #include <QListWidget>
 #include "GameState.h"
+#include "Leaderboard.h"
 
 class GameWindow : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit GameWindow(GameState *gameState, QWidget *parent = nullptr);
+    explicit GameWindow(Leaderboard *leaderboard, GameState *gameState, QWidget *parent = nullptr);
 
 private slots:
     void updateBoard();
@@ -33,6 +34,7 @@ private:
 
 
     GameState *state;
+    Leaderboard *lb;
 
     QGridLayout *boardLayout;
     QListWidget *foundWordsList;

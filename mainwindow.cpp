@@ -44,7 +44,7 @@ void MainWindow::onButtonClick(int buttonId)
     switch (choice) {
     case GAME:
     {
-         GameWindow *gameWindow = new GameWindow(&gameState, this);
+         GameWindow *gameWindow = new GameWindow(lb, &gameState, this);
         setCentralWidget(gameWindow);
         break;
     }
