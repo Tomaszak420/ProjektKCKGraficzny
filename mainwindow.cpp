@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
 
     ui->setupUi(this);
+    setWindowTitle(QString("BOGGLE"));
     connect(ui->Graj, &QPushButton::clicked, this, [this]() { onButtonClick(1); });
     connect(ui->Leaderboard, &QPushButton::clicked, this, [this]() { onButtonClick(2); });
     connect(ui->InstrukcjaGry, &QPushButton::clicked, this, [this]() { onButtonClick(3); });
@@ -30,6 +31,7 @@ void MainWindow::setupUI()
     connect(ui->Leaderboard, &QPushButton::clicked, this, [this]() { onButtonClick(2); });
     connect(ui->InstrukcjaGry, &QPushButton::clicked, this, [this]() { onButtonClick(3); });
     connect(ui->Wyjscie, &QPushButton::clicked, this, [this]() { onButtonClick(4); });
+    setWindowTitle(QString("BOGGLE"));
 }
 
 MainWindow::~MainWindow()

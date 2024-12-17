@@ -25,7 +25,7 @@ GameWindow::GameWindow(Leaderboard *leaderboard, GameState *gameState, QWidget *
     mainLayout->addWidget(foundWordsList);
 
     // Licznik słów
-    wordCounterLabel = new QLabel("Znalezione słowa: 0");
+    wordCounterLabel = new QLabel("Znalezione słowa: 0  Punkty: 0");
     mainLayout->addWidget(wordCounterLabel);
 
     // Licznik czasu
@@ -48,7 +48,7 @@ GameWindow::GameWindow(Leaderboard *leaderboard, GameState *gameState, QWidget *
     connect(checkWordButton, &QPushButton::clicked, this, &GameWindow::checkWord);
 
     // Timer
-    timeLeft = 5;
+    timeLeft = 10;
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &GameWindow::updateTime);
     timer->start(1000);
@@ -149,7 +149,7 @@ void GameWindow::updateFoundWords()
 
 void GameWindow::updateWordCounter()
 {
-    wordCounterLabel->setText(QString("Znalezione słowa: %1, Punkty: %1").arg(state->found_words.size(), state->calculateScore()));
+    wordCounterLabel->setText(QString("Znalezione słowa: %1  Punkty: %1").arg(state->found_words.size(), state->calculateScore()));
 }
 
 void GameWindow::clearFoundWords() 
