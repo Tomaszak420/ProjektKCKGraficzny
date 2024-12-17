@@ -24,6 +24,7 @@ public:
     BoardAnalyzer(string board[RZEDY][KOLUMNY], string dictionary_file_path);
     vector<string> getAllWords();
 
+private:
     void fillNeighborList();
 
     void findAllWords();
