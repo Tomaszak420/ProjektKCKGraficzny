@@ -20,7 +20,6 @@ class GameState {
         vector<string> found_words;
         vector<struct coordinates> selected_coordinates;
         vector<string> selected_letters;
-        int points;
 
         void startGame();
         bool isOnBoard(string word);

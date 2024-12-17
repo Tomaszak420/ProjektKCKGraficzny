@@ -73,8 +73,10 @@ void GameState::tryAddLetter(struct coordinates cursor)
 }
 
 void GameState::startGame() {
+    clearSelection();
     fillBoard();
-    //C:/Users/koksu/Desktop/ProjektKCKGraficzny2/
+    found_words.clear();
+
     BoardAnalyzer analyzer(board, "./dictionary.txt");
     all_words = analyzer.getAllWords();
 }

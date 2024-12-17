@@ -46,7 +46,6 @@ GameWindow::GameWindow(Leaderboard *leaderboard, GameState *gameState, QWidget *
     connect(restartButton, &QPushButton::clicked, this, &GameWindow::restartGame);
     connect(endButton, &QPushButton::clicked, this, &GameWindow::onBackToMenuClicked);
     connect(checkWordButton, &QPushButton::clicked, this, &GameWindow::checkWord);
-    state->fillBoard();
 
     // Timer
     timeLeft = 5;
@@ -150,7 +149,7 @@ void GameWindow::updateFoundWords()
 
 void GameWindow::updateWordCounter()
 {
-    wordCounterLabel->setText(QString("Znalezione słowa: %1").arg(state->found_words.size()));
+    wordCounterLabel->setText(QString("Znalezione słowa: %1, Punkty: %1").arg(state->found_words.size(), state->calculateScore()));
 }
 
 void GameWindow::clearFoundWords() 
@@ -191,11 +190,28 @@ void GameWindow::updateTime()
 //TODO przejście do lb
 void GameWindow::endGame()
 {
-    lb->setScoreBuffer(state->calculateScore());
-    LeaderboardUpdateWindow *leaderboardUpdateWindow = new LeaderboardUpdateWindow(lb, qobject_cast<MainWindow *>(parent()));
+    int score = state->calculateScore();
+    state->clearSelection();
 
-    if (leaderboardUpdateWindow) {
-        leaderboardUpdateWindow->show();
-        this->close();
+    if (lb->doesChangeLeaderboard(score))
+    {
+        lb->setScoreBuffer(score);
+        LeaderboardUpdateWindow *leaderboardUpdateWindow = new LeaderboardUpdateWindow(lb, qobject_cast<MainWindow *>(parent()));
+
+        if (leaderboardUpdateWindow)
+        {
+            leaderboardUpdateWindow->show();
+            this->close();
+        }
+    }
+    else
+    {
+        MainWindow *mainWindow = qobject_cast<MainWindow *>(parent());
+        if (mainWindow)
+        {
+            mainWindow->setupUI();
+            mainWindow->show();
+            this->close();
+        }
     }
 }

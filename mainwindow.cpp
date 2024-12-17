@@ -10,7 +10,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
     ui(new Ui::MainWindow),
     lb(new Leaderboard(10)),
-gameState()
+    gameState()
 {
 
     ui->setupUi(this);
@@ -44,7 +44,7 @@ void MainWindow::onButtonClick(int buttonId)
     switch (choice) {
     case GAME:
     {
-         GameWindow *gameWindow = new GameWindow(lb, &gameState, this);
+        GameWindow *gameWindow = new GameWindow(lb, &gameState, this);
         setCentralWidget(gameWindow);
         break;
     }

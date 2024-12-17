@@ -2,6 +2,7 @@
 #include "ui_leaderboardupdatewindow.h"
 #include "leaderboardwindow.h"
 #include "mainwindow.h"
+#include <iostream>
 
 LeaderboardUpdateWindow::LeaderboardUpdateWindow(Leaderboard *lb, QWidget *parent)
     : QDialog(parent),
@@ -20,13 +21,13 @@ LeaderboardUpdateWindow::~LeaderboardUpdateWindow()
     delete ui;
 }
 
-void LeaderboardUpdateWindow::goToLeaderboard() {
+void LeaderboardUpdateWindow::goToLeaderboard() 
+{
     QString input = ui->lineEdit->text();
     string name = input.toStdString();
-    
+
     int score = leaderboard->getScoreBuffer();
     leaderboard->insertScore(name, score);
-
     LeaderboardWindow *leaderboardWindow = new LeaderboardWindow(leaderboard, qobject_cast<MainWindow*>(parent()));
     if (leaderboardWindow) {
         leaderboardWindow->show();

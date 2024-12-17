@@ -26,17 +26,19 @@ void Leaderboard::insertScore(std::string name, int new_score)
     std::vector<struct LeaderboardItem>::iterator it;
     LeaderboardItem new_item = { name, new_score };
 
-    for (it = items.begin(); it < items.end(); it++)
+    for (it = items.begin(); it < items.end(); it++) 
     {
         if (it->score < new_score)
-        {
+        {   
             items.insert(it, new_item);
-        }
-    }
 
-    if (items.size() > max_length)
-    {
-        items.pop_back();
+            if (items.size() > max_length)
+            {
+                items.pop_back();
+            }
+
+            return;
+        }
     }
 
     if (items.size() < max_length)
